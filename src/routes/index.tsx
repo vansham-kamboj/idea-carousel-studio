@@ -251,7 +251,7 @@ function Index() {
               <p className="carousel-status">Slide {String(activeSlide + 1).padStart(2, "0")} of {String(slides.length).padStart(2, "0")}</p>
               <div className="slide-dots" aria-label="Choose slide">
                 {slides.map((_, index) => (
-                  <button key={index} type="button" aria-label={`Go to slide ${index + 1}`} aria-current={activeSlide === index} onClick={() => goToSlide(index)} />
+                  <Button key={index} type="button" variant="ghost" size="icon" aria-label={`Go to slide ${index + 1}`} aria-current={activeSlide === index} onClick={() => goToSlide(index)} />
                 ))}
               </div>
               <span className="canvas-size">1080 × 1350 px</span>
