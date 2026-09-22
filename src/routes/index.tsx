@@ -10,7 +10,7 @@ import {
 } from "@/lib/carousel-types";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowDown, ArrowRight, Download, ImageDown, LoaderCircle, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, Download, ImageDown, LoaderCircle, Sparkles } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -123,6 +123,15 @@ function Index() {
     setActiveSlide(nearest);
   }
 
+  function goToSlide(index: number) {
+    const row = carouselRef.current;
+    if (!row || slides.length === 0) return;
+    const nextIndex = Math.max(0, Math.min(index, slides.length - 1));
+    const child = row.children.item(nextIndex) as HTMLElement | null;
+    child?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    setActiveSlide(nextIndex);
+  }
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="app-header">
@@ -195,8 +204,8 @@ function Index() {
           <>
             <div className="results-toolbar">
               <div>
-                <p className="eyebrow">Choose a look</p>
-                <h2>Five directions. One idea.</h2>
+                <p className="eyebrow">Current draft</p>
+                <h2>Social carousel <em>preview</em></h2>
               </div>
               <div className="export-actions">
                 <Button variant="outline" onClick={() => void downloadPng()} disabled={exporting !== null}><ImageDown />{exporting === "png" ? "Exporting…" : "PNG"}</Button>
@@ -221,16 +230,32 @@ function Index() {
               ))}
             </div>
 
-            <div className="carousel-row" ref={carouselRef} onScroll={trackVisibleSlide}>
-              {slides.map((slide, index) => (
-                <div className="preview-frame" key={`${theme}-${index}`} onClick={() => setActiveSlide(index)}>
-                  <div className="slide-scaler">
-                    <ActiveTheme slide={slide} index={index} total={slides.length} platform={platform} />
+            <div className="preview-stage">
+              <Button className="slide-nav slide-nav-prev" variant="outline" size="icon" aria-label="Previous slide" disabled={activeSlide === 0} onClick={() => goToSlide(activeSlide - 1)}>
+                <ArrowLeft />
+              </Button>
+              <div className="carousel-row" ref={carouselRef} onScroll={trackVisibleSlide}>
+                {slides.map((slide, index) => (
+                  <div className={`preview-frame${activeSlide === index ? " is-active" : ""}`} key={`${theme}-${index}`} onClick={() => goToSlide(index)}>
+                    <div className="slide-scaler">
+                      <ActiveTheme slide={slide} index={index} total={slides.length} platform={platform} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <Button className="slide-nav slide-nav-next" variant="outline" size="icon" aria-label="Next slide" disabled={activeSlide === slides.length - 1} onClick={() => goToSlide(activeSlide + 1)}>
+                <ArrowRight />
+              </Button>
             </div>
-            <p className="carousel-status">Slide {activeSlide + 1} of {slides.length} · Scroll to explore</p>
+            <div className="carousel-footer">
+              <p className="carousel-status">Slide {String(activeSlide + 1).padStart(2, "0")} of {String(slides.length).padStart(2, "0")}</p>
+              <div className="slide-dots" aria-label="Choose slide">
+                {slides.map((_, index) => (
+                  <Button key={index} type="button" variant="ghost" size="icon" aria-label={`Go to slide ${index + 1}`} aria-current={activeSlide === index} onClick={() => goToSlide(index)} />
+                ))}
+              </div>
+              <span className="canvas-size">1080 × 1350 px</span>
+            </div>
 
             <div className="export-stage" aria-hidden="true">
               {slides.map((slide, index) => (
