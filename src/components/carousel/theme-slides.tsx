@@ -27,7 +27,7 @@ function Copy({ slide }: { slide: CarouselSlide }) {
 function Chrome({ index, total, platform }: Omit<ThemeProps, "slide">) {
   return (
     <>
-      <span className="slide-brand">SLIDR®</span>
+      <span className="slide-brand"><i aria-hidden="true" /> SLIDR®</span>
       <span className="slide-platform">{platform}</span>
       <span className="slide-progress">{index + 1}/{total}</span>
     </>
@@ -38,7 +38,7 @@ export function BoldBrutalist(props: ThemeProps) {
   return (
     <div className="slide-canvas theme-brutalist">
       <Chrome {...props} />
-      <div className="brutal-mark" aria-hidden="true">✦</div>
+      <div className="brutal-mark" aria-hidden="true">S/{String(props.index + 1).padStart(2, "0")}</div>
       {props.slide.kind === "content" && <span className="slide-number">0{props.slide.number}</span>}
       <div className="slide-copy"><Copy slide={props.slide} /></div>
       <div className="brutal-rule" />
@@ -51,6 +51,7 @@ export function CleanMinimal(props: ThemeProps) {
     <div className="slide-canvas theme-minimal">
       <Chrome {...props} />
       <div className="minimal-rule" />
+      <span className="minimal-edition">STUDIO NOTES · VOL 01</span>
       {props.slide.kind === "content" && <span className="slide-number">{String(props.slide.number).padStart(2, "0")}</span>}
       <div className="slide-copy"><Copy slide={props.slide} /></div>
       <span className="minimal-note">Thoughts worth saving.</span>
@@ -63,7 +64,7 @@ export function DarkNeon(props: ThemeProps) {
     <div className="slide-canvas theme-neon">
       <Chrome {...props} />
       <div className="neon-frame" />
-      <div className="neon-disc" />
+      <div className="neon-grid" />
       {props.slide.kind === "content" && <span className="slide-number">{String(props.slide.number).padStart(2, "0")}</span>}
       <div className="slide-copy"><Copy slide={props.slide} /></div>
       <span className="neon-signal">● LIVE SIGNAL</span>
@@ -75,8 +76,7 @@ export function SoftPastel(props: ThemeProps) {
   return (
     <div className="slide-canvas theme-pastel">
       <Chrome {...props} />
-      <div className="pastel-shape pastel-shape-one" />
-      <div className="pastel-shape pastel-shape-two" />
+      <div className="pastel-label">FIELD NOTE / {String(props.index + 1).padStart(2, "0")}</div>
       <div className="pastel-card">
         {props.slide.kind === "content" && <span className="slide-number">{props.slide.number}</span>}
         <div className="slide-copy"><Copy slide={props.slide} /></div>
@@ -89,7 +89,7 @@ export function Editorial(props: ThemeProps) {
   return (
     <div className="slide-canvas theme-editorial">
       <Chrome {...props} />
-      <div className="editorial-header">IDEAS / CULTURE / WORK</div>
+      <div className="editorial-header"><span>THE SLIDR REVIEW</span><span>IDEAS / CULTURE / WORK</span></div>
       {props.slide.kind === "content" && <span className="slide-number">{String(props.slide.number).padStart(2, "0")}</span>}
       <div className="slide-copy"><Copy slide={props.slide} /></div>
       <div className="editorial-rule" />
